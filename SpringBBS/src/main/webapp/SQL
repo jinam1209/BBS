@@ -1,0 +1,48 @@
+create database bbs;
+
+create user 'bbsuser'@'%' identified by '1209';
+
+grant all privileges on bbs.* to 'bbsuser'@'%';
+
+flush privileges;
+
+-------------------- member -------------------
+create table member(
+mnum int(11) auto_increment primary key,
+email varchar(100) not null,
+pwd varchar(100) not null,
+nickname varchar(100) not null,
+birthday date not null
+);
+
+--------------------- bbs ---------------------
+create table bbs(
+bnum int(11) auto_increment primary key,
+title varchar(200) not null,
+content varchar(3000) not null,
+writer varchar(100) not null,
+regdate date default current_timestamp,
+readcount int(11) default 0
+);
+
+------------------- comment -------------------
+create table comment(
+cnum int(11) auto_increment primary key,
+pnum int(11) not null,
+writer varchar(100) not null,
+regdate date default current_timestamp
+);
+
+-- 마지막에 설정
+alter table comment 
+add constraint fk_comment_cnum
+foreign key(pnum) references bbs(bnum);
+
+-------------------- files --------------------
+create table files(
+uuid varchar(100) primary key,
+savedir varchar(200) not null,
+fname varchar(1000) not null,
+ftype int(1) default 0,
+bnum int(11) not null
+);
